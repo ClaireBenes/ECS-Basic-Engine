@@ -1,5 +1,7 @@
 #include "EcsManager.hpp"
 
+u64 ECSManager::maxId = 0;
+
 void ECSManager::UpdateScene(f32 dt)
 {
 	SystemPhysicsUpdate(dt);

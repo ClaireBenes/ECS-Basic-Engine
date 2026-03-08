@@ -3,15 +3,18 @@
 #include "raylib.h"
 #include "Window.hpp"
 #include "IGame.hpp"
+#include "Jobs.hpp"
+
 void Engine::Start(i32 windowWidth, i32 windowHeight, const str& gameNameP,
 
-	unique_ptr<IGame>&& gameP) noexcept
+                   unique_ptr<IGame>&& gameP) noexcept
 
 {
 	gameName = gameNameP;
 	game = std::move(gameP);
 	Window window{ windowWidth, windowHeight, gameName };
 	SetTargetFPS(60);
+	jobs::Initialize();
 	game->Load();
 	while( !Window::ShouldClose() )
 	{

@@ -19,8 +19,13 @@ namespace render
 	{
 		::DrawTexture(texture, x, y, tint);
 	}
-	void DrawSprite(Texture texture2D, Rectangle srcRect, Rectangle dstRect, Color tint)
+	void DrawSprite(Texture texture2D, Rectangle srcRect, Rectangle dstRect, Vector2 origin, float rotation, Color tint)
 	{
-		::DrawTexturePro(texture2D, srcRect, dstRect, { 0, 0 }, 0, tint);
+		::DrawTexturePro(texture2D, srcRect, dstRect, origin, rotation, tint);
+	}
+
+	void DrawRectLine(Rectangle rect, float thickness, Color tint)
+	{
+		::DrawRectangleLinesEx(rect, thickness, tint);
 	}
 }

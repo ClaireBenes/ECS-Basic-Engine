@@ -17,12 +17,19 @@ public:
 	void UpdateScene(f32 dt);
 	void DrawScene();
 	void PrepareDraw();
+
 	u64 CreateEntity();
 	void RemoveEntity(u64 entityId);
+	bool EntityExists(u64 entityId);
 	Entity& FindEntity(u64 entityId);
+
 	Transform2D& CreateTransform2DComponent(u64 entityId);
 	Sprite& CreateSpriteComponent(u64 entityId, const str& texName);
 	Rigidbody2D& CreateRigidbody2DComponent(u64 entityId, const Vector2& pos, const Rectangle& box);
+	ScreenWrapper& CreateScreenWrapperComponent(u64 entityId, const Rectangle& boundingBox);
+	Lifetime& CreateLifetimeComponent(u64 entityId, float time);
+	Health& CreateHealthComponent(u64 entityId, int points, float invincibleTime);
+
 	template<class T>
 	T& GetComponent(u64 entityId)
 	{
@@ -38,22 +45,44 @@ public:
 		{
 			return bodies.at(FindEntityComponent(entityId, ComponentIndex::Rigidbody2D));
 		}
+		else if constexpr( std::is_same_v<T, ScreenWrapper> )
+		{
+			return screenWrappers.at(FindEntityComponent(entityId, ComponentIndex::ScreenWrapper));
+		}
+		else if constexpr( std::is_same_v<T, Lifetime> )
+		{
+			return lifetimes.at(FindEntityComponent(entityId, ComponentIndex::Lifetime));
+		}
+		else if constexpr( std::is_same_v<T, Health> )
+		{
+			return healths.at(FindEntityComponent(entityId, ComponentIndex::Health));
+		}
 	}
 private:
 	static u64 maxId;
+
 	// Entities and components
 	vector<u64> entityIds;
 	vector<Entity> entities;
-
 	vector<u64> entitiesToRemove{};
+
 	vector<Transform2D> transforms;
 	vector<Sprite> sprites;
 	vector<Rigidbody2D> bodies;
+	vector<ScreenWrapper> screenWrappers;
+	vector<Lifetime> lifetimes;
+	vector<Health> healths;
+
 	i32 FindEntityComponent(u64 entityId, ComponentIndex componentIndex);
 	void UpdateEntityWithComponent(u64 entityId, i32 newComponentId, ComponentIndex componentIndex);
 	void CleanRemovedEntities();
-	void SystemPhysicsUpdate(f32 dt);
+
 	void SystemSpriteDraw();
+	void SystemPhysicsUpdate(f32 dt);
+	void SystemScreenWrapUpdate(float dt);
+	void SystemLifetimeUpdate(float dt);
+	void SystemHealthUpdate(float dt);
+
 	template<class T>
 	void RemoveComponent(vector<T>& components, Entity& removedEntity, ComponentIndex componentTypeIndex)
 	{
@@ -83,6 +112,18 @@ private:
 		else if constexpr( std::is_same_v<T, Rigidbody2D> )
 		{
 			RemoveComponent<Rigidbody2D>(bodies, removedEntity, ComponentIndex::Rigidbody2D);
+		}
+		else if constexpr( std::is_same_v<T, ScreenWrapper> )
+		{
+			RemoveComponent<ScreenWrapper>(screenWrappers, removedEntity, ComponentIndex::ScreenWrapper);
+		}
+		else if constexpr( std::is_same_v<T, Lifetime> )
+		{
+			RemoveComponent<Lifetime>(lifetimes, removedEntity, ComponentIndex::Lifetime);
+		}
+		else if constexpr ( std::is_same_v<T, Health> )
+		{
+			RemoveComponent<Health>(healths, removedEntity, ComponentIndex::Health);
 		}
 	}
 };

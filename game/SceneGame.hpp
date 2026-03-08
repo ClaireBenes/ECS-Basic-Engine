@@ -14,8 +14,7 @@ using std::shared_ptr;
 class SceneGame : public IScene
 {
 public:
-	SceneGame(shared_ptr<ECSManager> ecsRef,
-		Game& game);
+	SceneGame(shared_ptr<ECSManager> ecsRef, Game& game);
 	void Load() override;
 	void Update(f32 dt) override;
 	void Draw() override;
@@ -23,6 +22,9 @@ public:
 private:
 	Game& game;
 	shared_ptr<ECSManager> ecs;
+
+	u64 playerId;
+	float nextFireTime = 0.0f;
 };
 
 #endif //GAMEIMPL_SCENE_GAME_HPP

@@ -5,7 +5,7 @@
 
 u64 ECSManager::maxId = 0;
 
-constexpr bool UseJobs = false;
+constexpr bool UseJobs = true;
 
 void ECSManager::UpdateScene(f32 dt)
 {

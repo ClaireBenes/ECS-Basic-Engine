@@ -3,6 +3,8 @@
 
 #include "GMath.hpp"
 
+constexpr int AsteroidCount = 10;
+
 SceneGame::SceneGame(shared_ptr<ECSManager> ecsRef, Game& game)
 	: ecs{ std::move(ecsRef) }, game{ game }
 {
@@ -24,7 +26,7 @@ void SceneGame::Load()
 	ecs->CreateSpriteComponent(starsId, "Stars");
 
 	// Asteroids
-	for( int i = 0; i < 10; i++ )
+	for( int i = 0; i < AsteroidCount; i++ )
 	{
 		u64 asteroidId = ecs->CreateEntity();
 		Transform2D& transform = ecs->CreateTransform2DComponent(asteroidId);
